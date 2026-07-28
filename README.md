@@ -102,6 +102,7 @@ article-platform/
 │   │   └── test/
 │   ├── pom.xml                   # Maven dependencies
 │   ├── Dockerfile                # Backend container build
+│   └── .dockerignore
 ├── frontend/                    # React SPA
 │   ├── src/
 │   │   ├── components/          # Reusable UI components
@@ -116,17 +117,24 @@ article-platform/
 │   │   ├── main.jsx             # Application entry point
 │   │   └── index.css            # Global styles
 │   ├── public/                  # Static assets
-│   ├── .env                     # Environment variables
+│   ├── .env                     # Local dev environment variables
 │   ├── eslint.config.js         # Linting rules
 │   ├── index.html               # HTML template
 │   ├── package.json             # NPM dependencies
 │   ├── vite.config.js           # Vite configuration
-│   └── Dockerfile               # Frontend container build
-├── docker-compose.yaml          # Multi-container orchestration
-├── docs/                        # Project documentation
-│   ├── api/                     # API specifications
-│   ├── architecture/            # System design documents
-│   └── deployment/              # Deployment guides
+│   ├── Dockerfile               # Frontend container build
+│   ├── nginx.conf               # Static serving + reverse proxy config
+│   └── .dockerignore
+├── scripts/
+│   ├── deploy.sh
+│   └── setup-dev.sh
+├── docs/
+│   ├── Official Documentation/  # Course-provided assignment specs
+│   └── Technical Report         # Project write-up / report
+├── .env.example                 # Environment variable template for Docker Compose
+├── docker-compose.yml           # Multi-container orchestration
+├── .gitignore
+├── LICENSE
 └── README.md
 ```
 
@@ -257,11 +265,11 @@ npm run coverage        # Run tests with coverage report
 
 ### Production Build
 ```bash
-# Build all services
-docker-compose -f docker-compose.prod.yaml build
+# Build and start all services (postgres, backend, frontend)
+docker-compose up -d --build
 
-# Deploy
-docker-compose -f docker-compose.prod.yaml up -d
+# Rebuild a single service after changing its code
+docker-compose up -d --build backend
 ```
 
 ### Environment Variables
